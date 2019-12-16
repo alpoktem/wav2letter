@@ -6,10 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <float.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <algorithm>
 #include <cmath>
 #include <functional>
@@ -71,21 +68,31 @@ void LexiconDecoder::decodeBegin() {
 
 void LexiconDecoder::decodeEnd() {
   candidatesReset();
+  bool hasNiceEnding = false;
+  for (const LexiconDecoderState& prevHyp :
+       hyp_[nDecodedFrames_ - nPrunedFrames_]) {
+    if (prevHyp.lex == lexicon_->getRoot()) {
+      hasNiceEnding = true;
+      break;
+    }
+  }
   for (const LexiconDecoderState& prevHyp :
        hyp_[nDecodedFrames_ - nPrunedFrames_]) {
     const TrieNode* prevLex = prevHyp.lex;
     const LMStatePtr& prevLmState = prevHyp.lmState;
 
-    auto lmStateScorePair = lm_->finish(prevLmState);
-    candidatesAdd(
-        lmStateScorePair.first,
-        prevLex,
-        &prevHyp,
-        prevHyp.score + opt_.lmWeight * lmStateScorePair.second,
-        sil_,
-        -1,
-        false // prevBlank
-    );
+    if (!hasNiceEnding || prevHyp.lex == lexicon_->getRoot()) {
+      auto lmStateScorePair = lm_->finish(prevLmState);
+      candidatesAdd(
+          lmStateScorePair.first,
+          prevLex,
+          &prevHyp,
+          prevHyp.score + opt_.lmWeight * lmStateScorePair.second,
+          sil_,
+          -1,
+          false // prevBlank
+      );
+    }
   }
 
   candidatesStore(hyp_[nDecodedFrames_ - nPrunedFrames_ + 1], true);

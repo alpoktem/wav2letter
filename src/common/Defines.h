@@ -169,21 +169,21 @@ DECLARE_string(decodertype);
 
 DECLARE_double(lmweight);
 DECLARE_double(wordscore);
-DECLARE_double(silweight);
-DECLARE_double(unkweight);
+DECLARE_double(silscore);
+DECLARE_double(unkscore);
+DECLARE_double(eosscore);
 DECLARE_double(beamthreshold);
 
 DECLARE_int32(maxload);
 DECLARE_int32(maxword);
 DECLARE_int32(beamsize);
+DECLARE_int32(beamsizetoken);
 DECLARE_int32(nthread_decoder);
 DECLARE_int32(lm_memory);
 
 // Seq2Seq
 DECLARE_double(smoothingtemperature);
 DECLARE_int32(attentionthreshold);
-DECLARE_double(hardselection);
-DECLARE_double(softselection);
 
 /* ========== ASG OPTIONS ========== */
 

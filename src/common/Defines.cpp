@@ -167,17 +167,19 @@ DEFINE_string(sclite, "", "path/to/sclite to be written");
 DEFINE_string(decodertype, "wrd", "wrd, tkn");
 
 DEFINE_double(lmweight, 0.0, "language model weight");
-DEFINE_double(wordscore, 0.0, "wordscore");
-DEFINE_double(silweight, 0.0, "silence weight");
+DEFINE_double(wordscore, 0.0, "word insertion score");
+DEFINE_double(silscore, 0.0, "silence insertion score");
 DEFINE_double(
-    unkweight,
+    unkscore,
     -std::numeric_limits<float>::infinity(),
-    "unknown word weight");
+    "unknown word insertion score");
+DEFINE_double(eosscore, 0.0, "EOS insertion score");
 DEFINE_double(beamthreshold, 25, "beam score threshold");
 
 DEFINE_int32(maxload, -1, "max number of testing examples.");
 DEFINE_int32(maxword, -1, "maximum number of words to use");
-DEFINE_int32(beamsize, 2500, "max beam size");
+DEFINE_int32(beamsize, 2500, "max overall beam size");
+DEFINE_int32(beamsizetoken, 250000, "max beam for token selection");
 DEFINE_int32(nthread_decoder, 1, "number of threads for decoding");
 DEFINE_int32(
     lm_memory,
@@ -192,11 +194,6 @@ DEFINE_int32(
     attentionthreshold,
     std::numeric_limits<int>::infinity(),
     "hard attention limit");
-DEFINE_double(hardselection, 1.0, "end-of-sentence threshold");
-DEFINE_double(
-    softselection,
-    std::numeric_limits<double>::infinity(),
-    "threshold to keep new candidate from being proposed");
 
 // ASG OPTIONS
 DEFINE_int64(linseg, 0, "# of epochs of LinSeg to init transitions for ASG");
