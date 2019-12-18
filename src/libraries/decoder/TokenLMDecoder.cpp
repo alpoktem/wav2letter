@@ -6,10 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <float.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <algorithm>
 #include <cmath>
 #include <functional>
@@ -20,9 +17,9 @@
 namespace w2l {
 
 void TokenLMDecoder::mergeCandidates() {
-  auto compareNodesShortList = [&](const LexiconDecoderState* node1,
-                                   const LexiconDecoderState* node2) {
-    int lmCmp = lm_->compareState(node1->lmState, node2->lmState);
+  auto compareNodesShortList = [](const LexiconDecoderState* node1,
+                                  const LexiconDecoderState* node2) {
+    int lmCmp = node1->lmState->compare(node2->lmState);
     if (lmCmp != 0) {
       return lmCmp > 0;
     } else { /* same LmState */
@@ -34,8 +31,7 @@ void TokenLMDecoder::mergeCandidates() {
 
   int nHypAfterMerging = 1;
   for (int i = 1; i < candidatePtrs_.size(); i++) {
-    if (lm_->compareState(
-            candidatePtrs_[i]->lmState,
+    if (candidatePtrs_[i]->lmState->compare(
             candidatePtrs_[nHypAfterMerging - 1]->lmState)) {
       candidatePtrs_[nHypAfterMerging] = candidatePtrs_[i];
       nHypAfterMerging++;
@@ -75,7 +71,7 @@ void TokenLMDecoder::decodeStep(const float* emissions, int T, int N) {
           score += transitions_[n * N + prevIdx];
         }
         if (n == sil_) {
-          score += opt_.silWeight;
+          score += opt_.silScore;
         }
 
         auto lmScoreReturn = lm_->score(prevLmState, n);
@@ -133,7 +129,7 @@ void TokenLMDecoder::decodeStep(const float* emissions, int T, int N) {
           score += transitions_[n * N + prevIdx];
         }
         if (n == sil_) {
-          score += opt_.silWeight;
+          score += opt_.silScore;
         }
 
         candidatesAdd(

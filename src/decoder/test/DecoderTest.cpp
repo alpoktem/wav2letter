@@ -159,12 +159,14 @@ TEST(DecoderTest, run) {
   /* -------- Build Decoder --------*/
   DecoderOptions decoderOpt(
       2500, // FLAGS_beamsize
+      25000, // FLAGS_beamsizetoken
       100.0, // FLAGS_beamthreshold
       2.0, // FLAGS_lmweight
       2.0, // FLAGS_lexiconcore
-      -std::numeric_limits<float>::infinity(), // FLAGS_unkweight
+      -std::numeric_limits<float>::infinity(), // FLAGS_unkscore
+      -1, // FLAGS_silscore
+      0, // FLAGS_eosscore
       false, // FLAGS_logadd
-      -1, // FLAGS_silweight
       CriterionType::ASG);
 
   WordLMDecoder decoder(
@@ -185,11 +187,15 @@ TEST(DecoderTest, run) {
 
   int n_hyp = results.size();
 
-  ASSERT_EQ(n_hyp, 1452);
+  ASSERT_EQ(n_hyp, 16); // only one with nice ending
+
+  for (int i = 0; i < std::min(n_hyp, 5); i++) {
+    LOG(INFO) << results[i].score;
+  }
 
   std::vector<float> hypScoreTarget{
-      -278.111, -278.652, -279.275, -279.847, -280.01};
-  for (int i = 0; i < 5; i++) {
+      -284.0998, -284.108, -284.119, -284.127, -284.296};
+  for (int i = 0; i < std::min(n_hyp, 5); i++) {
     ASSERT_NEAR(results[i].score, hypScoreTarget[i], 1e-3);
   }
 }

@@ -24,30 +24,36 @@ enum class CriterionType { ASG = 0, CTC = 1, S2S = 2 };
 
 struct DecoderOptions {
   int beamSize; // Maximum number of hypothesis we hold after each step
+  int beamSizeToken; // Maximum number of tokens we consider at each step
   float beamThreshold; // Threshold to prune hypothesis
   float lmWeight; // Weight of lm
-  float wordScore; // Score for inserting a word
-  float unkScore; // Score for inserting a unknown word
+  float wordScore; // Word insertion score
+  float unkScore; // Unknown word insertion score
+  float silScore; // Silence insertion score
+  float eosScore; // Score for inserting an EOS
   bool logAdd; // If or not use logadd when merging hypothesis
-  float silWeight; // Silence is golden
   CriterionType criterionType; // CTC or ASG
 
   DecoderOptions(
       const int beamSize,
+      const int beamSizeToken,
       const float beamThreshold,
       const float lmWeight,
       const float wordScore,
       const float unkScore,
+      const float silScore,
+      const float eosScore,
       const bool logAdd,
-      const float silWeight,
       const CriterionType criterionType)
       : beamSize(beamSize),
+        beamSizeToken(beamSizeToken),
         beamThreshold(beamThreshold),
         lmWeight(lmWeight),
         wordScore(wordScore),
         unkScore(unkScore),
+        silScore(silScore),
+        eosScore(eosScore),
         logAdd(logAdd),
-        silWeight(silWeight),
         criterionType(criterionType) {}
 
   DecoderOptions() {}

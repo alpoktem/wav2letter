@@ -10,7 +10,8 @@ target_sources(
   INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/LexiconDecoder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LexiconFreeDecoder.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/Seq2SeqDecoder.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/LexiconSeq2SeqDecoder.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/LexiconFreeSeq2SeqDecoder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/TokenLMDecoder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Trie.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp
